@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Singleplayer Cards</title>
+<style type="text/css">
+body {
+    font-family: sans-serif;
+    background: #232;
+    color: #CCB;
+    font-size: 16px;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+* {
+	box-sizing: border-box;
+}
+#header, #footer {
+    background: #121;
+    user-select: none;
+}
+#gamescreen {
+    position: relative;
+    user-select: none;
+    cursor: default;
+    white-space: nowrap;
+    flex: 1;
+}
+.card {
+    background: #CCB;
+    color: #334;
+    width: 5em;
+    height: 7em;
+    padding: 0.1em;
+
+    border-radius: 0.4em;
+    border: 0.1em solid rgba(0,0,0,0.5);
+
+    font-family: serif;
+    font-weight: bold;
+    font-size: 1.5em;
+    line-height: 1;
+
+    display: inline-flex;
+    flex-direction: column;
+}
+.card.grabbing {
+    box-shadow: 0 0 1em rgba(0,0,0,0.5);
+}
+.card.s2, .card.s3 {
+    color: #C33;
+}
+.card.highlight {
+    background: #EED;
+    border-color: rgba(255,255,255,0.75);
+}
+.card .numsuit {
+    display: flex;
+    flex-direction: row;
+    line-height: 1.5ch;
+}
+.card .numsuit div {
+    /* Need to set the width so .squish works without offsetting the suit */
+    width: 1.5ch;
+}
+.card .numsuit.reverse {
+    /*flex-direction: row-reverse;*/
+    transform: rotate(180deg);
+}
+.card .numsuit .squish {
+    /* For the number "10" */
+    transform-origin: left;
+    transform: scaleX(0.6);
+}
+.card .decoration {
+    flex: 1;
+
+    display: flex;
+    flex-direction: row;
+}
+.card .decoration .margin {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5ch;
+    width: 1.5ch;
+}
+.card .decoration .margin.reverse {
+    transform: rotate(180deg);
+}
+.card .decoration .mosaic {
+    flex: 1;
+    font-size: 1.5em;
+    font-weight: normal;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 0.33em 0;
+
+    /* It's the best I could figure out to make the suit not take a bunch
+    of vertical space */
+    line-height: 0;
+}
+.card .decoration .royal {
+    flex: 1;
+    font-size: 2em;
+    font-weight: normal;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    padding: 0.33em 0;
+
+    line-height: 0;    
+}
+.card .decoration .mosaic .rowA {
+    display: flex;
+
+    flex-direction: row;
+    justify-content: space-between;
+}
+.card .decoration .mosaic .rowB {
+    display: flex;
+
+    flex-direction: row;
+    justify-content: space-around;
+}
+.card .decoration .mosaic .rowA.reverse, .card .decoration .mosaic .rowB.reverse {
+    transform: rotate(180deg);
+}
+.card .suit {
+    font-weight: normal;
+}
+/* The U+FE0E is how you force a unicode symbol to be text instead of emoji.
+   U+FE0F is how you'd force it to be emoji instead. */
+.card.s1 .suit::after {
+    content: "\2663\FE0E";
+    /* content: "\2620"; */
+}
+.card.s2 .suit::after {
+    content: "\2666\FE0E";
+    /* content: "\2622"; */
+}
+.card.s3 .suit::after {
+    content: "\2665\FE0E";
+    /* content: "\260F"; */
+}
+.card.s4 .suit::after {
+    content: "\2660\FE0E";
+    /* content: "\2603"; */
+}
+.card .jack::after {
+    content: "\265F\FE0E";
+}
+.card .queen::after {
+    content: "\265B\FE0E";
+}
+.card .king::after {
+    content: "\265A\FE0E";
+}
+.card.s1 .suitjack::after {
+    content: "\1F424"    
+}
+.card.s1 .suitqueen::after {
+    content: "\1F413"    
+}
+.card.s1 .suitking::after {
+    content: "\1F983"    
+}
+.card.s2 .suitjack::after {
+    content: "\1F990"    
+}
+.card.s2 .suitqueen::after {
+    content: "\1F980"    
+}
+.card.s2 .suitking::after {
+    content: "\1F419"    
+}
+.card.s3 .suitjack::after {
+    content: "\1F410"    
+}
+.card.s3 .suitqueen::after {
+    content: "\1F98C"    
+}
+.card.s3 .suitking::after {
+    content: "\1F9AC"    
+}
+.card.s4 .suitjack::after {
+    content: "\1F98E"    
+}
+.card.s4 .suitqueen::after {
+    content: "\1F40A"    
+}
+.card.s4 .suitking::after {
+    content: "\1F409"    
+}
+</style>
+<script src="card-solitaire.js"></script>
+</head>
+<body>
+<div id="header">Singleplayer Cards</div>
+<div id="gamescreen"><noscript>Please enable Javascript.</noscript>
+    <div class="card s4 highlight">
+        <div class="numsuit"><div class="squish">10</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="mosaic">
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"><div class="suit"></div></div>
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB reverse"><div class="suit"></div></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div class="squish">10</div><div class="suit"></div></div>
+    </div>
+    <div class="card s3 highlight">
+        <div class="numsuit"><div>9</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="mosaic">
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"></div>
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"><div class="suit"></div></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB reverse"></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>9</div><div class="suit"></div></div>
+    </div>
+    <div class="card s2">
+        <div class="numsuit"><div>8</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="mosaic">
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"><div class="suit"></div></div>
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB reverse"><div class="suit"></div></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>8</div><div class="suit"></div></div>
+    </div>
+    <div class="card s1">
+        <div class="numsuit"><div>7</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="mosaic">
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB"><div class="suit"></div></div>
+                <div class="rowA"><div class="suit"></div><div class="suit"></div></div>
+                <div class="rowB reverse"></div>
+                <div class="rowA reverse"><div class="suit"></div><div class="suit"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>7</div><div class="suit"></div></div>
+    </div>
+    <br>
+    <div class="card s1">
+        <div class="numsuit"><div>J</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="jack"></div></div>
+                <div class="rowB"><div class="suitjack"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>J</div><div class="suit"></div></div>
+    </div>
+    <div class="card s1">
+        <div class="numsuit"><div>Q</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="queen"></div></div>
+                <div class="rowB"><div class="suitqueen"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>Q</div><div class="suit"></div></div>
+    </div>
+    <div class="card s1">
+        <div class="numsuit"><div>K</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="king"></div></div>
+                <div class="rowB"><div class="suitking"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>K</div><div class="suit"></div></div>
+    </div>
+    <div class="card s2">
+        <div class="numsuit"><div>J</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="jack"></div></div>
+                <div class="rowB"><div class="suitjack"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>J</div><div class="suit"></div></div>
+    </div>
+    <div class="card s2">
+        <div class="numsuit"><div>Q</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="queen"></div></div>
+                <div class="rowB"><div class="suitqueen"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>Q</div><div class="suit"></div></div>
+    </div>
+    <div class="card s2">
+        <div class="numsuit"><div>K</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="king"></div></div>
+                <div class="rowB"><div class="suitking"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>K</div><div class="suit"></div></div>
+    </div>
+    <br>
+    <div class="card s3">
+        <div class="numsuit"><div>J</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="jack"></div></div>
+                <div class="rowB"><div class="suitjack"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>J</div><div class="suit"></div></div>
+    </div>
+    <div class="card s3">
+        <div class="numsuit"><div>Q</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="queen"></div></div>
+                <div class="rowB"><div class="suitqueen"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>Q</div><div class="suit"></div></div>
+    </div>
+    <div class="card s3">
+        <div class="numsuit"><div>K</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="king"></div></div>
+                <div class="rowB"><div class="suitking"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>K</div><div class="suit"></div></div>
+    </div>
+    <div class="card s4">
+        <div class="numsuit"><div>J</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="jack"></div></div>
+                <div class="rowB"><div class="suitjack"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>J</div><div class="suit"></div></div>
+    </div>
+    <div class="card s4">
+        <div class="numsuit"><div>Q</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="queen"></div></div>
+                <div class="rowB"><div class="suitqueen"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>Q</div><div class="suit"></div></div>
+    </div>
+    <div class="card s4">
+        <div class="numsuit"><div>K</div><div class="suit"></div></div>
+        <div class="decoration">
+            <div class="margin"><div class="suit"></div></div>
+            <div class="royal">
+                <div class="rowB"><div class="king"></div></div>
+                <div class="rowB"><div class="suitking"></div></div>
+            </div>
+            <div class="margin reverse"><div class="suit"></div></div>
+        </div>
+        <div class="numsuit reverse"><div>K</div><div class="suit"></div></div>
+    </div>
+</div>
+<div id="footer"></div>
+</body>
+</html>
